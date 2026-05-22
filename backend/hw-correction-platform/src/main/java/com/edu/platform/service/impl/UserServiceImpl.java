@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
-    @Override
-    public User login(String username, String password) {
-        return this.getOne(new LambdaQueryWrapper<User>()
-                .eq(User::getUsername, username)
-                .eq(User::getPassword, password));
-    }
+  @Override
+  public User login(String username, String password) {
+    return this.getOne(new LambdaQueryWrapper<User>()
+        .eq(User::getUsername, username)
+        .eq(User::getPassword, password));
+  }
 }
