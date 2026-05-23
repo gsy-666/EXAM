@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+type Role = 1 | 2 | 3
+
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -15,7 +17,7 @@ const router = createRouter({
     {
       path: '/student',
       component: () => import('../views/Layout.vue'),
-      meta: { role: 1 },
+      meta: { role: 1 as Role },
       children: [
         {
           path: 'dashboard',
@@ -42,7 +44,7 @@ const router = createRouter({
     {
       path: '/teacher',
       component: () => import('../views/Layout.vue'),
-      meta: { role: 2 },
+      meta: { roles: [2, 3] as Role[] },
       children: [
         {
           path: 'dashboard',
@@ -78,10 +80,17 @@ router.beforeEach((to, _from, next) => {
   if (to.path === '/login') return next()
   const user = localStorage.getItem('user')
   if (!user) return next('/login')
-  const role = JSON.parse(user).role
-  if (to.meta.role && to.meta.role !== role) {
+
+  const role = JSON.parse(user).role as Role
+
+  const meta = to.meta as { role?: Role; roles?: Role[] }
+  if (meta.roles && !meta.roles.includes(role)) {
     return next(role === 1 ? '/student/dashboard' : '/teacher/dashboard')
   }
+  if (meta.role && meta.role !== role) {
+    return next(role === 1 ? '/student/dashboard' : '/teacher/dashboard')
+  }
+
   next()
 })
 

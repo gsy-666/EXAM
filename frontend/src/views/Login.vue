@@ -23,7 +23,11 @@ async function handleLogin() {
     localStorage.setItem('user', JSON.stringify(user))
     localStorage.setItem('userId', user.userId)
     message.success(`欢迎回来，${user.name}`)
-    router.push(user.role === 1 ? '/student/dashboard' : '/teacher/dashboard')
+    if (user.role === 1) {
+      router.push('/student/dashboard')
+    } else {
+      router.push('/teacher/dashboard')
+    }
   } finally {
     loading.value = false
   }
